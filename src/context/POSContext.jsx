@@ -56,7 +56,7 @@ export const POSProvider = ({ children }) => {
             if (data.appPattern) setAppPattern(data.appPattern);
             if (data.savedQR !== undefined) setSavedQR(data.savedQR);
           } else {
-            // Check if there is data in local storage to migrate to firebase
+            // Migrate settings if appSettings doesn't exist
             const localPin = localStorage.getItem('sakthi_elec_pin');
             const localPattern = localStorage.getItem('sakthi_elec_pattern');
             const localQR = localStorage.getItem('sakthi_elec_qr');
@@ -67,6 +67,29 @@ export const POSProvider = ({ children }) => {
             });
           }
         });
+
+        // Migrate Old Local Storage Bills & Items
+        const localBills = localStorage.getItem('sakthi_elec_bills');
+        if (localBills) {
+          const parsedBills = JSON.parse(localBills);
+          parsedBills.forEach(bill => setDoc(doc(db, "bills", bill.id.toString()), bill));
+          localStorage.removeItem('sakthi_elec_bills');
+        }
+
+        const localDeletedBills = localStorage.getItem('sakthi_elec_deleted_bills');
+        if (localDeletedBills) {
+          const parsedDeletedBills = JSON.parse(localDeletedBills);
+          parsedDeletedBills.forEach(bill => setDoc(doc(db, "deletedBills", bill.id.toString()), bill));
+          localStorage.removeItem('sakthi_elec_deleted_bills');
+        }
+
+        const localItems = localStorage.getItem('sakthi_elec_items');
+        if (localItems) {
+          const parsedItems = JSON.parse(localItems);
+          parsedItems.forEach(item => setDoc(doc(db, "items", item.id.toString()), item));
+          localStorage.removeItem('sakthi_elec_items');
+        }
+
         setLoading(false);
       } catch (error) {
         console.error("Firebase connection error. Ensure your firebaseConfig is correct.", error);
