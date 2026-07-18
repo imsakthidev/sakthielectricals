@@ -6,6 +6,7 @@ import { getAnalytics } from "firebase/analytics";
 const firebaseConfig = {
   apiKey: "AIzaSyCPam0NaBtOhyI2KyZwE6e9Yv33CK99SNM",
   authDomain: "sakthielectricals-ceff7.firebaseapp.com",
+  databaseURL: "https://sakthielectricals-ceff7-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "sakthielectricals-ceff7",
   storageBucket: "sakthielectricals-ceff7.firebasestorage.app",
   messagingSenderId: "142607909505",
