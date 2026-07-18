@@ -5,7 +5,7 @@ import { ShoppingCart, Printer, CheckCircle, Trash2, X } from 'lucide-react';
 const BillNow = () => {
   const { items, cart, updateQty, clearCart, cartTotal, confirmPayment, savedQR, bills } = usePOS();
   const [showPayment, setShowPayment] = useState(false);
-  const [currentBillId, setCurrentBillId] = useState(null);
+  const [printBillData, setPrintBillData] = useState(null);
 
   const handlePay = () => {
     if (cartTotal === 0) return alert('Please add items to bill.');
@@ -13,23 +13,21 @@ const BillNow = () => {
   };
 
   const handleConfirmAndPrint = async (print) => {
-    const billId = await confirmPayment();
-    setCurrentBillId(billId);
+    const newBill = await confirmPayment();
+    setPrintBillData(newBill);
     if (print) {
       setTimeout(() => {
         window.print();
         setShowPayment(false);
-        setCurrentBillId(null);
+        setPrintBillData(null);
       }, 500);
     } else {
       setShowPayment(false);
-      setCurrentBillId(null);
+      setPrintBillData(null);
     }
   };
 
-  // Find the bill data for printing if needed
-  const printBill = bills.find(b => b.id === currentBillId);
-
+  // printBillData contains the entire bill object to print
   return (
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <div style={{ marginBottom: '2rem' }}>
@@ -106,22 +104,22 @@ const BillNow = () => {
 
       {/* Print Template (Hidden normally) */}
       <div id="print-section">
-        {printBill && (
+        {printBillData && (
           <div style={{ textAlign: 'center' }}>
             <h2 style={{ margin: '0 0 5px 0', fontSize: '1.5rem' }}>⚡ Sakthi Electricals</h2>
             <p style={{ margin: '0 0 5px 0', fontSize: '0.9rem' }}>Thangammalpuram, Theni</p>
             <p style={{ margin: '0 0 15px 0', fontSize: '0.9rem', fontWeight: '500' }}>Ph: +91 9585992141</p>
             <div style={{ borderTop: '1px dashed #000', borderBottom: '1px dashed #000', padding: '10px 0', marginBottom: '15px', textAlign: 'left', fontSize: '0.95rem' }}>
-              <div style={{ marginBottom: '5px' }}>Date: {new Date(printBill.date).toLocaleString()}</div>
-              <div>Bill No: {printBill.id}</div>
+              <div style={{ marginBottom: '5px' }}>Date: {new Date(printBillData.date).toLocaleString()}</div>
+              <div>Bill No: {printBillData.id}</div>
             </div>
             <div style={{ textAlign: 'left', marginBottom: '15px', fontSize: '0.95rem', borderBottom: '1px dashed #000', paddingBottom: '15px' }}>
-              {printBill.summary.split(', ').map((item, i) => (
+              {printBillData.summary.split(', ').map((item, i) => (
                 <div key={i} style={{ marginBottom: '5px' }}>{item}</div>
               ))}
             </div>
             <div style={{ fontSize: '1.2rem', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between' }}>
-              <span>Total:</span> <span>₹{printBill.total}</span>
+              <span>Total:</span> <span>₹{printBillData.total}</span>
             </div>
             <div style={{ marginTop: '25px', fontSize: '0.85rem' }}>
               <p>Thank you for shopping with us!</p>

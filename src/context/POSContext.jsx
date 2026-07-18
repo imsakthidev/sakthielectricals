@@ -148,7 +148,7 @@ export const POSProvider = ({ children }) => {
     } catch (e) {
       console.error("Error saving bill:", e);
     }
-    return newBill.id;
+    return newBill;
   };
 
   const moveToBin = async (id) => {
