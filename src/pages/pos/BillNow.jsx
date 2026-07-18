@@ -5,7 +5,7 @@ import { ShoppingCart, Printer, CheckCircle, Trash2, X } from 'lucide-react';
 const BillNow = () => {
   const { items, cart, updateQty, clearCart, cartTotal, confirmPayment, savedQR, bills } = usePOS();
   const [showPayment, setShowPayment] = useState(false);
-  const [printBillData, setPrintBillData] = useState(null);
+
 
   const handlePay = () => {
     if (cartTotal === 0) return alert('Please add items to bill.');
@@ -14,20 +14,43 @@ const BillNow = () => {
 
   const handleConfirmAndPrint = async (print) => {
     const newBill = await confirmPayment();
-    setPrintBillData(newBill);
     if (print) {
+      const printSection = document.getElementById('print-section');
+      if (!printSection) {
+        const div = document.createElement('div');
+        div.id = 'print-section';
+        document.body.appendChild(div);
+      }
+      
+      document.getElementById('print-section').innerHTML = `
+        <div style="text-align: center; font-family: monospace; color: #000;">
+          <h2 style="margin: 0 0 5px 0; font-size: 1.5rem;">⚡ Sakthi Electricals</h2>
+          <p style="margin: 0 0 5px 0; font-size: 0.9rem;">Thangammalpuram, Theni</p>
+          <p style="margin: 0 0 15px 0; font-size: 0.9rem; font-weight: 500;">Ph: +91 9585992141</p>
+          <div style="border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 10px 0; margin-bottom: 15px; text-align: left; font-size: 0.95rem;">
+            <div style="margin-bottom: 5px;">Date: ${new Date(newBill.date).toLocaleString()}</div>
+            <div>Bill No: ${newBill.id}</div>
+          </div>
+          <div style="text-align: left; margin-bottom: 15px; font-size: 0.95rem; border-bottom: 1px dashed #000; padding-bottom: 15px;">
+            ${newBill.summary.split(', ').map((item) => `<div style="margin-bottom: 5px;">${item}</div>`).join('')}
+          </div>
+          <div style="font-size: 1.2rem; font-weight: bold; display: flex; justify-content: space-between;">
+            <span>Total:</span> <span>₹${newBill.total}</span>
+          </div>
+          <div style="margin-top: 25px; font-size: 0.85rem;">
+            <p>Thank you for shopping with us!</p>
+            <p>Please visit again.</p>
+          </div>
+        </div>
+      `;
       setTimeout(() => {
         window.print();
         setShowPayment(false);
-        setPrintBillData(null);
-      }, 500);
+      }, 100);
     } else {
       setShowPayment(false);
-      setPrintBillData(null);
     }
   };
-
-  // printBillData contains the entire bill object to print
   return (
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <div style={{ marginBottom: '2rem' }}>
@@ -103,31 +126,7 @@ const BillNow = () => {
       )}
 
       {/* Print Template (Hidden normally) */}
-      <div id="print-section">
-        {printBillData && (
-          <div style={{ textAlign: 'center' }}>
-            <h2 style={{ margin: '0 0 5px 0', fontSize: '1.5rem' }}>⚡ Sakthi Electricals</h2>
-            <p style={{ margin: '0 0 5px 0', fontSize: '0.9rem' }}>Thangammalpuram, Theni</p>
-            <p style={{ margin: '0 0 15px 0', fontSize: '0.9rem', fontWeight: '500' }}>Ph: +91 9585992141</p>
-            <div style={{ borderTop: '1px dashed #000', borderBottom: '1px dashed #000', padding: '10px 0', marginBottom: '15px', textAlign: 'left', fontSize: '0.95rem' }}>
-              <div style={{ marginBottom: '5px' }}>Date: {new Date(printBillData.date).toLocaleString()}</div>
-              <div>Bill No: {printBillData.id}</div>
-            </div>
-            <div style={{ textAlign: 'left', marginBottom: '15px', fontSize: '0.95rem', borderBottom: '1px dashed #000', paddingBottom: '15px' }}>
-              {printBillData.summary.split(', ').map((item, i) => (
-                <div key={i} style={{ marginBottom: '5px' }}>{item}</div>
-              ))}
-            </div>
-            <div style={{ fontSize: '1.2rem', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between' }}>
-              <span>Total:</span> <span>₹{printBillData.total}</span>
-            </div>
-            <div style={{ marginTop: '25px', fontSize: '0.85rem' }}>
-              <p>Thank you for shopping with us!</p>
-              <p>Please visit again.</p>
-            </div>
-          </div>
-        )}
-      </div>
+      <div id="print-section"></div>
     </div>
   );
 };
