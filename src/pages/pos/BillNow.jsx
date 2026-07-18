@@ -12,8 +12,8 @@ const BillNow = () => {
     setShowPayment(true);
   };
 
-  const handleConfirmAndPrint = (print) => {
-    const billId = confirmPayment();
+  const handleConfirmAndPrint = async (print) => {
+    const billId = await confirmPayment();
     setCurrentBillId(billId);
     if (print) {
       setTimeout(() => {
