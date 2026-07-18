@@ -158,6 +158,23 @@ body {
   .auth-card {
     padding: 1.5rem !important;
   }
+
+  .scroll-area {
+    padding-bottom: 6rem !important;
+  }
+
+  .scroll-area-pos {
+    padding-bottom: 12rem !important;
+  }
+}
+
+/* Base scroll area classes for desktop */
+.scroll-area {
+  padding-bottom: 2rem;
+}
+
+.scroll-area-pos {
+  padding-bottom: 2rem;
 }
 
 /* Print Specific */

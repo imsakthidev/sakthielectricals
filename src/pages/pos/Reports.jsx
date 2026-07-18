@@ -97,36 +97,61 @@ const Reports = () => {
 
   const printReceipt = (bill) => {
     // Basic approach: write to hidden div and trigger print. 
-    // In a real robust app, you'd generate a separate printable component or window.
-    const printSection = document.getElementById('print-section');
-    if (!printSection) {
-      const div = document.createElement('div');
-      div.id = 'print-section';
-      document.body.appendChild(div);
-    }
+    const printFrame = document.createElement('iframe');
+    printFrame.style.position = 'fixed';
+    printFrame.style.right = '0';
+    printFrame.style.bottom = '0';
+    printFrame.style.width = '0';
+    printFrame.style.height = '0';
+    printFrame.style.border = '0';
+    document.body.appendChild(printFrame);
+
+    const doc = printFrame.contentWindow.document;
+    doc.open();
+    doc.write(`
+      <html>
+        <head>
+          <title>Receipt ${bill.id}</title>
+          <style>
+            @page { size: A6; margin: 0; }
+            body { font-family: 'Courier New', Courier, monospace; font-size: 12px; padding: 10mm; margin: 0; color: #000; }
+            h2 { margin: 0 0 5px 0; font-size: 1.5rem; text-align: center; }
+            p { margin: 0 0 5px 0; font-size: 0.9rem; text-align: center; }
+            .info { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 10px 0; margin-bottom: 15px; }
+            .items { border-bottom: 1px dashed #000; padding-bottom: 15px; margin-bottom: 15px; }
+            .total { font-size: 1.2rem; font-weight: bold; display: flex; justify-content: space-between; }
+            .footer { margin-top: 25px; font-size: 0.85rem; text-align: center; }
+          </style>
+        </head>
+        <body>
+          <h2>⚡ Sakthi Electricals</h2>
+          <p>Thangammalpuram, Theni</p>
+          <p style="font-weight: 500; margin-bottom: 15px;">Ph: +91 9585992141</p>
+          <div class="info">
+            <div style="margin-bottom: 5px;">Date: ${new Date(bill.date).toLocaleString()}</div>
+            <div>Bill No: ${bill.id}</div>
+          </div>
+          <div class="items">
+            ${bill.summary.split(', ').map((item) => `<div style="margin-bottom: 5px;">${item}</div>`).join('')}
+          </div>
+          <div class="total">
+            <span>Total:</span> <span>₹${bill.total}</span>
+          </div>
+          <div class="footer">
+            <p>Thank you for shopping with us!</p>
+            <p>Please visit again.</p>
+          </div>
+        </body>
+      </html>
+    `);
+    doc.close();
+
+    printFrame.contentWindow.focus();
+    printFrame.contentWindow.print();
     
-    document.getElementById('print-section').innerHTML = `
-      <div style="text-align: center; font-family: monospace; color: #000;">
-        <h2 style="margin: 0 0 5px 0; font-size: 1.5rem;">⚡ Sakthi Electricals</h2>
-        <p style="margin: 0 0 5px 0; font-size: 0.9rem;">Thangammalpuram, Theni</p>
-        <p style="margin: 0 0 15px 0; font-size: 0.9rem; font-weight: 500;">Ph: +91 9585992141</p>
-        <div style="border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 10px 0; margin-bottom: 15px; text-align: left; font-size: 0.95rem;">
-          <div style="margin-bottom: 5px;">Date: ${new Date(bill.date).toLocaleString()}</div>
-          <div>Bill No: ${bill.id}</div>
-        </div>
-        <div style="text-align: left; margin-bottom: 15px; font-size: 0.95rem; border-bottom: 1px dashed #000; padding-bottom: 15px;">
-          ${bill.summary.split(', ').map((item) => `<div style="margin-bottom: 5px;">${item}</div>`).join('')}
-        </div>
-        <div style="font-size: 1.2rem; font-weight: bold; display: flex; justify-content: space-between;">
-          <span>Total:</span> <span>₹${bill.total}</span>
-        </div>
-        <div style="margin-top: 25px; font-size: 0.85rem;">
-          <p>Thank you for shopping with us!</p>
-          <p>Please visit again.</p>
-        </div>
-      </div>
-    `;
-    window.print();
+    setTimeout(() => {
+      document.body.removeChild(printFrame);
+    }, 1000);
   };
 
   return (
@@ -157,7 +182,7 @@ const Reports = () => {
 
       <h3 style={{ fontSize: '1.2rem', fontWeight: '600', marginBottom: '1rem', color: 'var(--text-dark)' }}>Bill History</h3>
       
-      <div style={{ flex: 1, overflowY: 'auto', background: 'var(--card-bg)', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)', overflowX: 'hidden' }}>
+      <div className="scroll-area" style={{ flex: 1, overflowY: 'auto', background: 'var(--card-bg)', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)', overflowX: 'hidden' }}>
         {sortedBills.length > 0 ? (
           <ul style={{ listStyle: 'none' }}>
             {sortedBills.map((bill, i) => {

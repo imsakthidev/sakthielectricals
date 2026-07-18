@@ -91,7 +91,7 @@ const ManageItems = () => {
       </div>
 
       <h3 style={{ fontSize: '1.2rem', fontWeight: '600', marginBottom: '1rem', color: 'var(--text-dark)' }}>Current Inventory</h3>
-      <div style={{ flex: 1, overflowY: 'auto' }}>
+      <div className="scroll-area" style={{ flex: 1, overflowY: 'auto' }}>
         <div style={{ display: 'grid', gap: '1rem' }}>
           {items.map(item => (
             <div key={item.id} className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem' }}>
