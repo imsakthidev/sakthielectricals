@@ -1,0 +1,190 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --hue: 220;
+  --primary: hsl(var(--hue), 80%, 50%);
+  --primary-light: hsl(var(--hue), 80%, 65%);
+  --primary-dark: hsl(var(--hue), 80%, 30%);
+  
+  --bg-color: hsl(var(--hue), 20%, 97%);
+  --card-bg: #ffffff;
+  --text-dark: hsl(var(--hue), 30%, 15%);
+  --text-muted: hsl(var(--hue), 15%, 45%);
+  --border-color: hsl(var(--hue), 20%, 90%);
+  
+  --success: hsl(150, 70%, 40%);
+  --success-light: hsl(150, 70%, 90%);
+  --warning: hsl(40, 90%, 50%);
+  --danger: hsl(0, 70%, 50%);
+  
+  --radius-sm: 8px;
+  --radius: 16px;
+  --radius-lg: 24px;
+  
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+  --shadow: 0 4px 15px rgba(0,0,0,0.05);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.1);
+  
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: hsl(var(--hue), 20%, 10%);
+    --card-bg: hsl(var(--hue), 20%, 14%);
+    --text-dark: hsl(var(--hue), 20%, 95%);
+    --text-muted: hsl(var(--hue), 10%, 65%);
+    --border-color: hsl(var(--hue), 20%, 20%);
+    
+    --glass-bg: rgba(20, 25, 40, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.05);
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-dark);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Glassmorphism Utilities */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(var(--primary), 0.7); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(var(--primary), 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(var(--primary), 0); }
+}
+
+@media screen {
+  #print-section {
+    display: none !important;
+  }
+}
+
+/* Responsive Design for Mobile / Tablet */
+@media (max-width: 768px) {
+  .pos-app-container {
+    flex-direction: column-reverse; /* Sidebar moves to bottom */
+  }
+  
+  .pos-sidebar {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    padding: 0.5rem;
+    border-right: none;
+    border-top: 1px solid var(--border-color);
+    z-index: 100;
+  }
+  
+  .pos-sidebar-header {
+    display: none;
+  }
+  
+  .pos-sidebar nav {
+    flex-direction: row !important;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    margin: 0;
+  }
+  
+  .nav-btn {
+    padding: 0.5rem !important;
+    flex-direction: column !important;
+    gap: 0.25rem !important;
+    flex: 1;
+    justify-content: center;
+    text-align: center !important;
+    border-radius: var(--radius-sm) !important;
+  }
+
+  .nav-label {
+    font-size: 0.65rem;
+  }
+  
+  .nav-logout {
+    display: none !important; /* Hide lock button on bottom bar to save space, or keep it */
+  }
+  
+  .pos-content {
+    padding: 1rem;
+  }
+
+  /* Cart Bottom Bar adjustments */
+  .glass {
+    left: 1rem !important;
+    right: 1rem !important;
+    bottom: 5.5rem !important; /* Move above the bottom tab bar */
+    padding: 1rem !important;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  /* Grid layouts */
+  .card {
+    padding: 1rem;
+  }
+  
+  .auth-card {
+    padding: 1.5rem !important;
+  }
+}
+
+/* Print Specific */
+@media print {
+  @page {
+    size: A6;
+    margin: 0;
+  }
+  
+  body * {
+    visibility: hidden;
+  }
+  #print-section, #print-section * {
+    visibility: visible;
+  }
+  #print-section {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 105mm; /* Exact A6 width */
+    height: 148mm; /* Exact A6 height */
+    overflow: hidden;
+    padding: 10mm;
+    box-sizing: border-box;
+    display: block !important;
+    color: black;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+  }
+}
