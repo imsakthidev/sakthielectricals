@@ -126,9 +126,7 @@ const Reports = () => {
         </div>
       </div>
     `;
-    setTimeout(() => {
-      window.print();
-    }, 100);
+    window.print();
   };
 
   return (

@@ -148,7 +148,7 @@ export const POSProvider = ({ children }) => {
     return total + (item ? item.price * qty : 0);
   }, 0);
 
-  const confirmPayment = async () => {
+  const confirmPayment = () => {
     if (Object.keys(cart).length === 0) return null;
     const billItems = Object.entries(cart).map(([id, qty]) => {
       const item = items.find(i => i.id === parseInt(id) || i.id === id);
@@ -166,11 +166,11 @@ export const POSProvider = ({ children }) => {
     setBills(prev => [...prev, newBill]);
     clearCart();
 
-    try {
-      await setDoc(doc(db, "bills", newBill.id.toString()), newBill);
-    } catch (e) {
+    // Run Firebase upload in the background without blocking
+    setDoc(doc(db, "bills", newBill.id.toString()), newBill).catch(e => {
       console.error("Error saving bill:", e);
-    }
+    });
+    
     return newBill;
   };
 

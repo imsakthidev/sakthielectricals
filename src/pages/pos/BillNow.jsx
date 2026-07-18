@@ -12,9 +12,9 @@ const BillNow = () => {
     setShowPayment(true);
   };
 
-  const handleConfirmAndPrint = async (print) => {
-    const newBill = await confirmPayment();
-    if (print) {
+  const handleConfirmAndPrint = (print) => {
+    const newBill = confirmPayment();
+    if (print && newBill) {
       const printSection = document.getElementById('print-section');
       if (!printSection) {
         const div = document.createElement('div');
@@ -43,10 +43,9 @@ const BillNow = () => {
           </div>
         </div>
       `;
-      setTimeout(() => {
-        window.print();
-        setShowPayment(false);
-      }, 100);
+      // Call print IMMEDIATELY in the same tick so mobile browsers don't block it
+      window.print();
+      setShowPayment(false);
     } else {
       setShowPayment(false);
     }
