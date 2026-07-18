@@ -72,21 +72,21 @@ export const POSProvider = ({ children }) => {
         const localBills = localStorage.getItem('sakthi_elec_bills');
         if (localBills) {
           const parsedBills = JSON.parse(localBills);
-          parsedBills.forEach(bill => setDoc(doc(db, "bills", bill.id.toString()), bill));
+          await Promise.all(parsedBills.map(bill => setDoc(doc(db, "bills", bill.id.toString()), bill).catch(e => console.error(e))));
           localStorage.removeItem('sakthi_elec_bills');
         }
 
         const localDeletedBills = localStorage.getItem('sakthi_elec_deleted_bills');
         if (localDeletedBills) {
           const parsedDeletedBills = JSON.parse(localDeletedBills);
-          parsedDeletedBills.forEach(bill => setDoc(doc(db, "deletedBills", bill.id.toString()), bill));
+          await Promise.all(parsedDeletedBills.map(bill => setDoc(doc(db, "deletedBills", bill.id.toString()), bill).catch(e => console.error(e))));
           localStorage.removeItem('sakthi_elec_deleted_bills');
         }
 
         const localItems = localStorage.getItem('sakthi_elec_items');
         if (localItems) {
           const parsedItems = JSON.parse(localItems);
-          parsedItems.forEach(item => setDoc(doc(db, "items", item.id.toString()), item));
+          await Promise.all(parsedItems.map(item => setDoc(doc(db, "items", item.id.toString()), item).catch(e => console.error(e))));
           localStorage.removeItem('sakthi_elec_items');
         }
 
