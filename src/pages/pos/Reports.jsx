@@ -112,16 +112,17 @@ const Reports = () => {
       <html>
         <head>
           <title>Receipt ${bill.id}</title>
-          <style>
-            @page { size: A6; margin: 0; }
-            body { font-family: 'Courier New', Courier, monospace; font-size: 12px; padding: 10mm; margin: 0; color: #000; }
-            h2 { margin: 0 0 5px 0; font-size: 1.5rem; text-align: center; }
-            p { margin: 0 0 5px 0; font-size: 0.9rem; text-align: center; }
-            .info { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 10px 0; margin-bottom: 15px; }
-            .items { border-bottom: 1px dashed #000; padding-bottom: 15px; margin-bottom: 15px; }
-            .total { font-size: 1.2rem; font-weight: bold; display: flex; justify-content: space-between; }
-            .footer { margin-top: 25px; font-size: 0.85rem; text-align: center; }
-          </style>
+            <style>
+              @page { size: 105mm 148mm; margin: 0; }
+              html, body { width: 105mm; min-height: 148mm; margin: 0; padding: 0; }
+              body { font-family: 'Courier New', Courier, monospace; font-size: 12px; padding: 10mm; color: #000; box-sizing: border-box; }
+              h2 { margin: 0 0 5px 0; font-size: 1.5rem; text-align: center; }
+              p { margin: 0 0 5px 0; font-size: 0.9rem; text-align: center; }
+              .info { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 10px 0; margin-bottom: 15px; }
+              .items { border-bottom: 1px dashed #000; padding-bottom: 15px; margin-bottom: 15px; }
+              .total { font-size: 1.2rem; font-weight: bold; display: flex; justify-content: space-between; }
+              .footer { margin-top: 25px; font-size: 0.85rem; text-align: center; }
+            </style>
         </head>
         <body>
           <h2>⚡ Sakthi Electricals</h2>
